@@ -36,7 +36,7 @@ jobs:
         if: ${{ failure() }}
         run: echo "Some of jobs failed" && false
       - name: Build x86_64-FreeBSD
-        uses: cross-platform-actions/action@v0.27.0
+        uses: cross-platform-actions/action@v0.28.0
         if: startsWith(matrix.os, 'ubuntu')
         env:
           TARGET: x86_64-unknown-freebsd
