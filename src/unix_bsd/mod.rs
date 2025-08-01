@@ -197,7 +197,17 @@ fn delete_route(route: &Route) -> io::Result<()> {
 }
 
 fn add_or_del_route_req(route: &Route, rtm_type: u8) -> io::Result<m_rtmsg> {
-    let rtm_flags = RTF_STATIC | RTF_UP;
+    let mut rtm_flags = RTF_STATIC | RTF_UP;
+
+    if route.gateway.is_some() {
+        rtm_flags |= RTF_GATEWAY;
+    }
+
+    if (route.destination.is_ipv4() && route.prefix == 32)
+        || (route.destination.is_ipv6() && route.prefix == 128)
+    {
+        rtm_flags |= RTF_HOST;
+    }
 
     let mut rtm_addrs = RTA_DST | RTA_NETMASK;
     if rtm_type == RTM_ADD as u8 || route.gateway.is_some() {
